@@ -8,8 +8,8 @@ Creer une application CRUD employé web avec un API Graphql Nodejs, ReactJS.
 * 
 ## Spec technique
 
-* API: GrahqlJS, Mongodb, Expressjs, ES6
-* Web: Apollo client, ReactJS, Apollo Client
+* API: GrahqlJS, Mongodb, ES6 ou Typescript
+* Web: Apollo client, ReactJS,
 * Repository: Gitlab
 * Workflow: Utiliser le système de branch, pull request pour publier les changements
 
