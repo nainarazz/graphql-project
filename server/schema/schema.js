@@ -1,4 +1,6 @@
 const graphql = require('graphql');
+const Employee = require('../models/employee');
+const Experience = require('../models/experience');
 
 const {
   GraphQLObjectType,
