@@ -6,6 +6,7 @@ const {
   GraphQLInt,
   GraphQLID,
   GraphQLSchema,
+  GraphQLList,
 } = graphql;
 
 // dummy data
@@ -76,6 +77,12 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, { name }) {
         // code to get data from db
         return employees.find(e => e.prenom === name);
+      },
+    },
+    employees: {
+      type: new GraphQLList(EmployeeType),
+      resolve() {
+        return employees;
       },
     },
   },
