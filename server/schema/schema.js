@@ -11,37 +11,6 @@ const {
   GraphQLList,
 } = graphql;
 
-// dummy data
-const employees = [
-  {
-    nom: 'Naina', prenom: 'Thiery', age: 23, poste: 'Software Developer', experienceId: 1,
-  },
-  {
-    nom: 'Razafindrabiby', prenom: 'Anitha', age: 21, poste: 'Student', experienceId: 2,
-  },
-  {
-    nom: 'Razafindrabiby', prenom: 'Nemi', age: 13, poste: 'Student', experienceId: 3,
-  },
-];
-
-const experiences = [
-  {
-    id: 1,
-    titre: 'senior',
-    description: 'test1',
-  },
-  {
-    id: 2,
-    titre: 'senior1',
-    description: 'test2',
-  },
-  {
-    id: 3,
-    titre: 'senior3',
-    description: 'test3',
-  },
-];
-
 const ExperienceType = new GraphQLObjectType({
   name: 'Experience',
   fields: () => ({
@@ -59,12 +28,10 @@ const EmployeeType = new GraphQLObjectType({
     prenom: { type: GraphQLString },
     age: { type: GraphQLInt },
     poste: { type: GraphQLString },
-    experienceId: { type: GraphQLID },
     experience: {
       type: ExperienceType,
       resolve(parent) {
-        // get the experience type data
-        return experiences.find(e => e.id === parent.experienceId);
+        return Experience.findById(parent.experienceId);
       },
     },
   }),
@@ -75,16 +42,55 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     employee: {
       type: EmployeeType,
-      args: { name: { type: GraphQLString } },
-      resolve(parent, { name }) {
-        // code to get data from db
-        return employees.find(e => e.prenom === name);
+      args: { id: { type: GraphQLID } },
+      resolve(parent, { id }) {
+        return Employee.findById(id);
       },
     },
     employees: {
       type: new GraphQLList(EmployeeType),
       resolve() {
-        return employees;
+        return Employee.find({});
+      },
+    },
+  },
+});
+
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addEmployee: {
+      type: EmployeeType,
+      args: {
+        nom: { type: GraphQLString },
+        prenom: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        poste: { type: GraphQLString },
+        experienceId: { type: GraphQLID },
+      },
+      resolve(parent, args) {
+        const employee = new Employee({
+          nom: args.nom,
+          prenom: args.prenom,
+          age: args.age,
+          poste: args.poste,
+          experienceId: args.experienceId,
+        });
+        return employee.save();
+      },
+    },
+    addExperience: {
+      type: ExperienceType,
+      args: {
+        titre: { type: GraphQLString },
+        description: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        const experience = new Experience({
+          titre: args.titre,
+          description: args.description,
+        });
+        return experience.save();
       },
     },
   },
@@ -92,4 +98,5 @@ const RootQuery = new GraphQLObjectType({
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
+  mutation: Mutation,
 });
