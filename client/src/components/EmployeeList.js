@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Table, Button, Grid,
 } from 'react-bootstrap';
+import ModalInput from './ModalInput';
 
 const data = [
   {
@@ -16,7 +17,21 @@ const data = [
 ];
 
 class EmployeeList extends Component {
-  static displayEmployees() {
+  state = {
+    showModal: false
+  }
+
+  handleClose = () => {
+    console.log("close");
+    this.setState({ showModal: false });
+  }
+
+  handleShow = () => {
+    console.log("clicked");
+    this.setState({ showModal: true });
+  }
+
+  displayEmployees() {
     // will be changed later to data from db
     const employees = data;
 
@@ -29,11 +44,11 @@ class EmployeeList extends Component {
         </td>
       </tr>
     ));
-
+    
     return (
       <div>
         <Grid>
-          <Button bsStyle="primary">Add Employee</Button>
+          <Button bsStyle="primary" onClick={this.handleShow}>Add Employee</Button>
           <Table striped bordered condensed hover>
             <thead>
               <tr>
@@ -53,7 +68,8 @@ class EmployeeList extends Component {
   render() {
     return (
       <div>
-        {EmployeeList.displayEmployees()}
+        {this.displayEmployees()}
+        <ModalInput show={this.state.showModal} onHide={this.handleClose} />
       </div>
     );
   }
