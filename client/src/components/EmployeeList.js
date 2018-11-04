@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
-import {
-  Table, Button, Grid,
-} from 'react-bootstrap';
+import { Table, Button, Grid } from 'react-bootstrap';
+import { gql } from 'apollo-boost';
+import { graphql } from 'react-apollo';
 import ModalInput from './ModalInput';
 
-const data = [
+const getEmployeesQuery = gql`
   {
-    id: 1, nom: 'razafindrabiby ', prenom: 'naina', age: 23, poste: 'software dev',
-  },
-  {
-    id: 2, nom: 'razafindrabiby ', prenom: 'anitha', age: 22, poste: 'student',
-  },
-  {
-    id: 3, nom: 'razafindrabiby ', prenom: 'nem', age: 13, poste: 'student',
-  },
-];
+    employees {
+      id,
+      nom,
+      prenom
+    }
+  }
+`
 
 class EmployeeList extends Component {
   state = {
@@ -32,8 +30,12 @@ class EmployeeList extends Component {
   }
 
   displayEmployees() {
-    // will be changed later to data from db
-    const employees = data;
+    const data = this.props.data;
+    const employees = data.employees;
+
+    if (data.loading) {
+      return 'Loading list of employees ...';
+    }
 
     const list = employees.map(emp => (
       <tr key={emp.id}>
@@ -75,4 +77,4 @@ class EmployeeList extends Component {
   }
 }
 
-export default EmployeeList;
+export default graphql(getEmployeesQuery)(EmployeeList);

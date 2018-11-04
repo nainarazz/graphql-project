@@ -11,7 +11,7 @@ class CustomModal extends Component {
             <div>
                 <Modal show={this.props.show} onHide={this.props.onHide}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
+                        <Modal.Title>Employee Form</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         {EmployeeForm}
