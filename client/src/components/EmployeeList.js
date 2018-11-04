@@ -20,12 +20,10 @@ class EmployeeList extends Component {
   }
 
   handleClose = () => {
-    console.log("close");
     this.setState({ showModal: false });
   }
 
   handleShow = () => {
-    console.log("clicked");
     this.setState({ showModal: true });
   }
 
