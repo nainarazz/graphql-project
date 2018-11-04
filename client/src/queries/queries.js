@@ -10,6 +10,16 @@ const getEmployeesQuery = gql`
   }
 `
 
+const getEmployeeQuery = gql`
+    query($id: String!) {
+        employees(id: $id) {
+            id,
+            nom,
+            prenom
+        }
+    } 
+`
+
 const addEmployeeMutation = gql`
   mutation AddEmployee($nom: String!, $prenom: String!, $age: Int!, $poste: String!, $experienceId: ID!) {
     addEmployee(nom: $nom, prenom: $prenom, age: $age, poste: $poste, experienceId: $experienceId) {
@@ -27,4 +37,49 @@ const addExperienceMutation = gql`
   }
 `
 
-export { getEmployeesQuery, addEmployeeMutation, addExperienceMutation };
+const updateEmployeeMutation = gql`
+  mutation UpdateEmployee($id: String!, $nom: String!, $prenom: String!, $age: Int!, $poste: String!, $experienceId: ID!) {
+    updateEmployee(id: $id, nom: $nom, prenom: $prenom, age: $age, poste: $poste, experienceId: $experienceId) {
+        id,
+        nom,
+        prenom
+    }
+  }
+`
+
+const updateExperienceMutation = gql`
+  mutation UpdateExperience($id: String!, $titre: String!, $description: String!) {
+    updateExperience(id: $id, titre: $titre, description: $description) {
+        id
+    }
+  }
+`
+
+const deleteEmployeeMutation = gql`
+  mutation DeleteEmployee($id: String!, $nom: String!, $prenom: String!, $age: Int!, $poste: String!, $experienceId: ID!) {
+    deleteEmployee(id: $id) {
+        id,
+        nom,
+        prenom
+    }
+  }
+`
+
+const deleteExperienceMutation = gql`
+  mutation DeleteExperience($id: String!, $nom: String!, $prenom: String!, $age: Int!, $poste: String!, $experienceId: ID!) {
+    deleteExperience(id: $id) {
+        id
+    }
+  }
+`
+
+export { 
+    getEmployeeQuery, 
+    getEmployeesQuery, 
+    addEmployeeMutation, 
+    addExperienceMutation,
+    updateEmployeeMutation,
+    updateExperienceMutation,
+    deleteEmployeeMutation,
+    deleteExperienceMutation
+};
