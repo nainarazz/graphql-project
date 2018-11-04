@@ -9,7 +9,7 @@ import {
     Col,
     Form
 } from 'react-bootstrap';
-import { addEmployeeMutation, addExperienceMutation } from '../queries/queries';
+import { getEmployeesQuery, addEmployeeMutation, addExperienceMutation } from '../queries/queries';
 
 class ModalInput extends Component {
     state = {
@@ -38,9 +38,10 @@ class ModalInput extends Component {
                 age: parseInt( this.state.age, 10),
                 poste: this.state.poste,
                 experienceId: insertedExperience.data.addExperience.id,
-            }
+            },
+            refetchQueries: [{ query: getEmployeesQuery }]
         });
-
+        
         this.props.onHide();
     }
 

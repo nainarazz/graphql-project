@@ -6,18 +6,14 @@ import { getEmployeesQuery } from '../queries/queries';
 
 class EmployeeList extends Component {
   state = {
-    showModal: false
+    showModal: false,
+    employees: []
   }
 
   handleClose = () => {
     this.setState({ showModal: false });
   }
-
-  handleSave = (newList) => {
-
-    this.setState({ showModal: false });
-  }
-  
+ 
   handleShow = () => {
     this.setState({ showModal: true });
   }
@@ -65,7 +61,7 @@ class EmployeeList extends Component {
     return (
       <div>
         {this.displayEmployees()}
-        <ModalInput show={this.state.showModal} onHide={this.handleClose} />
+        <ModalInput show={this.state.showModal} onHide={this.handleClose} onSave={this.handleSave} />
       </div>
     );
   }
