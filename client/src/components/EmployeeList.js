@@ -13,17 +13,23 @@ class EmployeeList extends Component {
     this.setState({ showModal: false });
   }
 
+  handleSave = (newList) => {
+
+    this.setState({ showModal: false });
+  }
+  
   handleShow = () => {
     this.setState({ showModal: true });
   }
 
   displayEmployees() {
     const data = this.props.data;
-    const employees = data.employees;
 
     if (data.loading) {
       return 'Loading list of employees ...';
     }
+
+    const employees = data.employees;
 
     const list = employees.map(emp => (
       <tr key={emp.id}>

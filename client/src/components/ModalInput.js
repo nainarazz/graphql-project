@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { graphql, compose } from 'react-apollo';
 import {
     Modal,
     Button,
@@ -8,8 +9,9 @@ import {
     Col,
     Form
 } from 'react-bootstrap';
+import { addEmployeeMutation, addExperienceMutation } from '../queries/queries';
 
-class CustomModal extends Component {
+class ModalInput extends Component {
     state = {
         nom: '',
         prenom: '',
@@ -19,11 +21,27 @@ class CustomModal extends Component {
         description: ''
     }
 
-    submitForm = (e) => {
+    submitForm = async e => {
         e.preventDefault();
-        console.log("state ", this.state);
+
+        const insertedExperience = await this.props.addExperienceMutation({
+            variables: {
+                titre: this.state.titre,
+                description: this.state.description
+            }
+        });
+
+        await this.props.addEmployeeMutation({
+            variables: {
+                nom: this.state.nom,
+                prenom: this.state.prenom,
+                age: parseInt( this.state.age, 10),
+                poste: this.state.poste,
+                experienceId: insertedExperience.data.addExperience.id,
+            }
+        });
+
         this.props.onHide();
-        // this.setState({ nom: e.})
     }
 
     handleSave = () => {
@@ -114,4 +132,7 @@ class CustomModal extends Component {
     }
 }
 
-export default CustomModal;
+export default compose(
+    graphql(addEmployeeMutation, { name: 'addEmployeeMutation'}),
+    graphql(addExperienceMutation, { name: 'addExperienceMutation'})
+)(ModalInput);
