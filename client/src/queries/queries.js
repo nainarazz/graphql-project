@@ -11,8 +11,8 @@ const getEmployeesQuery = gql`
 `
 
 const getEmployeeQuery = gql`
-    query($id: String!) {
-        employees(id: $id) {
+    query($id: String) {
+        employee(id: $id) {
             id,
             nom,
             prenom
