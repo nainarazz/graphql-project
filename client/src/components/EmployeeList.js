@@ -1,18 +1,8 @@
 import React, { Component } from 'react';
 import { Table, Button, Grid } from 'react-bootstrap';
-import { gql } from 'apollo-boost';
 import { graphql } from 'react-apollo';
 import ModalInput from './ModalInput';
-
-const getEmployeesQuery = gql`
-  {
-    employees {
-      id,
-      nom,
-      prenom
-    }
-  }
-`
+import { getEmployeesQuery } from '../queries/queries';
 
 class EmployeeList extends Component {
   state = {

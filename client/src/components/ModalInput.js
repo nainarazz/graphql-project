@@ -8,7 +8,6 @@ import {
     Col,
     Form
 } from 'react-bootstrap';
-// import EmployeeForm from './EmplooyeeForm';
 
 class CustomModal extends Component {
     state = {
