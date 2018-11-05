@@ -16,7 +16,10 @@ Creer une application CRUD employé web avec un API Graphql Nodejs, ReactJS.
 ## Indication
 Ne vous inquiétez pas si vous ne pouvez pas tout faire, faites de votre mieux :). Nous préférons de petits changements très propres et utiles plutôt que beaucoup de changements inachevés
 
+<h3>Installation</h3>
+<p>To initialize the frontend, go to the client directory then run <code>npm install</code>. After that, run <code>npm start</code>.</p>
 
+<p>To initialize the backend, go to the server directory then run <code>npm install</code>. After that, run <code>node app.js</code>.</p>
 
 
 
