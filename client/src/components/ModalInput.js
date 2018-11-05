@@ -130,6 +130,15 @@ class ModalInput extends Component {
         console.log("next props data ", nextProps);
         if (nextProps.data) {
             this.setState({...nextProps.data});
+        } else {
+            this.setState({
+                nom: '',
+                prenom: '',
+                age: '',
+                poste: '',
+                titre: '',
+                description: ''  
+            });
         }
     }
 
