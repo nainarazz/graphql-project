@@ -28,6 +28,7 @@ const EmployeeType = new GraphQLObjectType({
     prenom: { type: GraphQLString },
     age: { type: GraphQLInt },
     poste: { type: GraphQLString },
+    experienceId: { type: GraphQLID },
     experience: {
       type: ExperienceType,
       resolve(parent) {

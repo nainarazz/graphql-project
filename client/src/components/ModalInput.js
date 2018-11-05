@@ -3,116 +3,120 @@ import { graphql, compose } from 'react-apollo';
 import {
     Modal,
     Button,
-    FormControl,
-    FormGroup,
-    ControlLabel,
-    Col,
-    Form
 } from 'react-bootstrap';
-import { getEmployeesQuery, addEmployeeMutation, addExperienceMutation } from '../queries/queries';
+import { 
+    getEmployeesQuery, 
+    addEmployeeMutation, 
+    addExperienceMutation, 
+    updateEmployeeMutation, 
+    updateExperienceMutation 
+} from '../queries/queries';
+import EmployeeForm from './employeeForm';
 
 class ModalInput extends Component {
     state = {
-        nom: '',
-        prenom: '',
-        age: '',
-        poste: '',
-        titre: '',
-        description: ''
+        formFields: {
+            id: '',
+            nom: '',
+            prenom: '',
+            age: '',
+            poste: '',
+            experienceId: '',
+            titre: '',
+            description: ''
+        },
+        initialFields: {
+            id: '',
+            nom: '',
+            prenom: '',
+            age: '',
+            poste: '',
+            experienceId: '',
+            titre: '',
+            description: ''
+        }
     }
 
     submitForm = async e => {
         e.preventDefault();
+        if (this.state.formFields.id) {
+            await this.updateData();
+        } else {
+            await this.saveData();
+        }
+    }
 
-        const insertedExperience = await this.props.addExperienceMutation({
+    saveData = async () => {
+        const experienceResult = await this.props.addExperienceMutation({
             variables: {
-                titre: this.state.titre,
-                description: this.state.description
+                titre: this.state.formFields.titre || "",
+                description: this.state.formFields.description || ""
             }
         });
 
         await this.props.addEmployeeMutation({
             variables: {
-                nom: this.state.nom,
-                prenom: this.state.prenom,
-                age: parseInt( this.state.age, 10),
-                poste: this.state.poste,
-                experienceId: insertedExperience.data.addExperience.id,
+                nom: this.state.formFields.nom || "",
+                prenom: this.state.formFields.prenom || "",
+                age: parseInt( this.state.formFields.age, 10) || 0,
+                poste: this.state.formFields.poste || "",
+                experienceId: experienceResult.data.addExperience.id || "",
             },
             refetchQueries: [{ query: getEmployeesQuery }]
         });
         
+        this.initializeState();
         this.props.onHide();
     }
 
-    handleSave = () => {
-        console.log("saved");
-        this.setState({ showModal: false });
+    updateData = async () => {
+        await this.props.updateExperienceMutation({
+            variables: {
+                id: this.state.formFields.experienceId,
+                titre: this.state.formFields.titre || "",
+                description: this.state.formFields.description || ""
+            }
+        });
+
+        await this.props.updateEmployeeMutation({
+            variables: {
+                id: this.state.formFields.id || "",
+                nom: this.state.formFields.nom || "",
+                prenom: this.state.formFields.prenom || "",
+                age: parseInt( this.state.formFields.age, 10) || 0,
+                poste: this.state.formFields.poste || "",
+                experienceId: this.state.formFields.experienceId || "",
+            },
+            refetchQueries: [{ query: getEmployeesQuery }]
+        });
+        
+        this.initializeState();
+        this.props.onHide();
+    }
+
+    initializeState = () => {
+        this.setState({ formFields: { ...this.state.initialFields} });
       }
 
-    employeeForm = (
-        <Form horizontal>
-            <FormGroup controlId="formHorizontalNom">
-                <Col componentClass={ControlLabel} sm={2}>
-                    Nom
-                </Col>
-    
-                <Col sm={10}>
-                    <FormControl type="text" placeholder="Nom" onChange={(e) => this.setState({nom: e.target.value})} />
-                </Col>
-            </FormGroup>
-    
-            <FormGroup controlId="formHorizontalPrenom">
-                <Col componentClass={ControlLabel} sm={2}>
-                    Prenom
-                </Col>
-                
-                <Col sm={10}>
-                    <FormControl type="text" placeholder="Prenom" onChange={(e) => this.setState({prenom: e.target.value})} />
-                </Col>
-            </FormGroup>
-            
-            <FormGroup controlId="formHorizontalAge">
-                <Col componentClass={ControlLabel} sm={2}>
-                    Age
-                </Col>
-                
-                <Col sm={10}>
-                    <FormControl type="text" placeholder="Age" onChange={(e) => this.setState({age: e.target.value})} />
-                </Col>
-            </FormGroup>
-            
-            <FormGroup controlId="formHorizontalPoste">
-                <Col componentClass={ControlLabel} sm={2}>
-                    Poste
-                </Col>
-                
-                <Col sm={10}>
-                    <FormControl type="text" placeholder="Poste" onChange={(e) => this.setState({poste: e.target.value})} />
-                </Col>
-            </FormGroup>
-            
-            <FormGroup controlId="formHorizontalTitre">
-                <Col componentClass={ControlLabel} sm={2}>
-                    Titre
-                </Col>
-                
-                <Col sm={10}>
-                    <FormControl type="text" placeholder="Titre" onChange={(e) => this.setState({titre: e.target.value})} />
-                </Col>
-            </FormGroup>
-            
-            <FormGroup controlId="formHorizontalDescription">
-                <Col componentClass={ControlLabel} sm={2}>
-                    Description
-                </Col>
-                
-                <Col sm={10}>
-                    <FormControl componentClass="textarea" placeholder="Description" onChange={(e) => this.setState({description: e.target.value})} />
-                </Col>
-            </FormGroup>
-        </Form>
-    );
+    changed = (e, identifier) => {
+        const state = { ...this.state.formFields };
+        state[identifier] = e.target.value;
+        
+        this.setState({ formFields: state });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data) {
+            const {experience, ...employeeDetail} = nextProps.data;
+            const data = { ...experience, ...employeeDetail };
+
+            this.setState({formFields: data});
+        } else {
+            this.setState({
+                formFields: { ...this.state.initialFields },
+            });
+        }
+    }
 
     render() {
         return (
@@ -122,7 +126,7 @@ class ModalInput extends Component {
                         <Modal.Title>Employee Form</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        {this.employeeForm}
+                        <EmployeeForm data={this.state.formFields} changed={this.changed}/>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.submitForm}>Save</Button>
@@ -135,5 +139,7 @@ class ModalInput extends Component {
 
 export default compose(
     graphql(addEmployeeMutation, { name: 'addEmployeeMutation'}),
-    graphql(addExperienceMutation, { name: 'addExperienceMutation'})
+    graphql(addExperienceMutation, { name: 'addExperienceMutation'}),
+    graphql(updateEmployeeMutation, { name: 'updateEmployeeMutation'}),
+    graphql(updateExperienceMutation, { name: 'updateExperienceMutation'}),
 )(ModalInput);
