@@ -6,11 +6,31 @@ import {
 
 import { graphql, compose } from 'react-apollo';
 import { 
+    getEmployeesQuery,
     deleteEmployeeMutation, 
     deleteExperienceMutation, 
 } from '../queries/queries';
 
 class ConfirmationDialog extends Component {
+    handleDelete = async (e) => {
+        e.preventDefault();
+
+        await this.props.deleteExperienceMutation({
+            variables: {
+                id: this.props.data.experienceId,
+            }
+        });
+
+        await this.props.deleteEmployeeMutation({
+            variables: {
+                id: this.props.data.id,
+            },
+            refetchQueries: [{ query: getEmployeesQuery }]
+        });
+        
+        this.props.onHide();
+    }
+
     render() {
         return (
             <div>
@@ -22,8 +42,8 @@ class ConfirmationDialog extends Component {
                         {this.props.message}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={this.submitForm}>Delete</Button>
-                        <Button onClick={this.submitForm}>Cancel</Button>
+                        <Button onClick={this.handleDelete}>Delete</Button>
+                        <Button onClick={this.props.onHide}>Cancel</Button>
                     </Modal.Footer>
                 </Modal>
             </div>

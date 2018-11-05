@@ -63,7 +63,7 @@ const updateExperienceMutation = gql`
 `
 
 const deleteEmployeeMutation = gql`
-  mutation DeleteEmployee($id: String!, $nom: String!, $prenom: String!, $age: Int!, $poste: String!, $experienceId: ID!) {
+  mutation DeleteEmployee($id: String!) {
     deleteEmployee(id: $id) {
         id,
         nom,
@@ -73,7 +73,7 @@ const deleteEmployeeMutation = gql`
 `
 
 const deleteExperienceMutation = gql`
-  mutation DeleteExperience($id: String!, $nom: String!, $prenom: String!, $age: Int!, $poste: String!, $experienceId: ID!) {
+  mutation DeleteExperience($id: String!) {
     deleteExperience(id: $id) {
         id
     }
