@@ -1,6 +1,8 @@
 const graphql = require('graphql');
 const Employee = require('../models/employee');
 const Experience = require('../models/experience');
+const ExperienceType = require('../graphql/types/experience');
+const EmployeeType = require('../graphql/types/employee');
 
 const {
   GraphQLObjectType,
@@ -10,33 +12,6 @@ const {
   GraphQLSchema,
   GraphQLList,
 } = graphql;
-
-const ExperienceType = new GraphQLObjectType({
-  name: 'Experience',
-  fields: () => ({
-    id: { type: GraphQLID },
-    titre: { type: GraphQLString },
-    description: { type: GraphQLString },
-  }),
-});
-
-const EmployeeType = new GraphQLObjectType({
-  name: 'Employee',
-  fields: () => ({
-    id: { type: GraphQLID },
-    nom: { type: GraphQLString },
-    prenom: { type: GraphQLString },
-    age: { type: GraphQLInt },
-    poste: { type: GraphQLString },
-    experienceId: { type: GraphQLID },
-    experience: {
-      type: ExperienceType,
-      resolve(parent) {
-        return Experience.findById(parent.experienceId);
-      },
-    },
-  }),
-});
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
