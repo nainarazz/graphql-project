@@ -2,24 +2,31 @@ import React, { Component } from 'react';
 import { Table, Button, Grid } from 'react-bootstrap';
 import { graphql } from 'react-apollo';
 import ModalInput from './ModalInput';
+import ConfirmationDialog from './ConfirmationDialog';
 import { getEmployeesQuery } from '../queries/queries';
 
 class EmployeeList extends Component {
   state = {
     showModal: false,
+    modalEdit: false,
+    modalDelete: false, 
     data: null
   }
 
   closeModal = () => {
-    this.setState({ showModal: false });
+    this.setState({ showModal: false, modalDelete: false, modalEdit: false });
   }
  
   handleShow = () => {
-    this.setState({ showModal: true, data: null });
+    this.setState({ showModal: true, data: null, modalEdit: true });
   }
 
   handleEditEmployee = (emp) => {
-    this.setState({ data: emp, showModal: true });
+    this.setState({ data: emp, showModal: true, modalEdit: true });
+  }
+
+  handleDeleteEmployee = (emp) => {
+    this.setState({ data: emp, showModal: true, modalDelete: true });
   }
 
   displayEmployees() {
@@ -36,7 +43,7 @@ class EmployeeList extends Component {
         <td>{emp.nom} {emp.prenom}</td>
         <td>
           <i className="glyphicon glyphicon-pencil" onClick={ () => this.handleEditEmployee(emp) } />
-          <i className="glyphicon glyphicon-trash" />
+          <i className="glyphicon glyphicon-trash" onClick={ () => this.handleDeleteEmployee(emp) }/>
         </td>
       </tr>
     ));
@@ -65,7 +72,8 @@ class EmployeeList extends Component {
     return (
       <div>
         {this.displayEmployees()}
-        <ModalInput data={this.state.data} show={this.state.showModal} onHide={this.closeModal} />
+        <ModalInput data={this.state.data} show={this.state.showModal && this.state.modalEdit} onHide={this.closeModal} />
+        <ConfirmationDialog data={this.state.data} show={this.state.showModal && this.state.modalDelete} onHide={this.closeModal} message={"Do you really want to delete this employee?"}/>
       </div>
     );
   }
