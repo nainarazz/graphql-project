@@ -1,0 +1,11 @@
+.App {
+  text-align: center;
+}
+
+.glyphicon {
+  margin-left: 15px;
+}
+
+.glyphicon-trash {
+  color: red;
+}

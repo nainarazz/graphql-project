@@ -28,6 +28,7 @@ const EmployeeType = new GraphQLObjectType({
     prenom: { type: GraphQLString },
     age: { type: GraphQLInt },
     poste: { type: GraphQLString },
+    experienceId: { type: GraphQLID },
     experience: {
       type: ExperienceType,
       resolve(parent) {
@@ -91,6 +92,59 @@ const Mutation = new GraphQLObjectType({
           description: args.description,
         });
         return experience.save();
+      },
+    },
+    updateEmployee: {
+      type: EmployeeType,
+      args: {
+        id: { type: GraphQLString },
+        nom: { type: GraphQLString },
+        prenom: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        poste: { type: GraphQLString },
+        experienceId: { type: GraphQLID },
+      },
+      resolve(parent, args) {
+        const { id, ...data } = args;
+
+        const update = { $set: { ...data } };
+        const options = { new: true };
+
+        return Employee.findByIdAndUpdate(id, update, options);
+      },
+    },
+    updateExperience: {
+      type: ExperienceType,
+      args: {
+        id: { type: GraphQLString },
+        titre: { type: GraphQLString },
+        description: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        const { id, ...data } = args;
+
+        const update = { $set: { ...data } };
+        const options = { new: true };
+
+        return Experience.findByIdAndUpdate(id, update, options);
+      },
+    },
+    deleteEmployee: {
+      type: EmployeeType,
+      args: {
+        id: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return Employee.findByIdAndRemove(args.id);
+      },
+    },
+    deleteExperience: {
+      type: ExperienceType,
+      args: {
+        id: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return Experience.findByIdAndRemove(args.id);
       },
     },
   },
