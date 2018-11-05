@@ -6,6 +6,18 @@
   margin-left: 15px;
 }
 
+.glyphicon:hover {
+  cursor: pointer;
+}
+
 .glyphicon-trash {
   color: red;
+}
+
+.add-employee-btn {
+  margin-bottom: 20px;
+}
+
+.employee-list-container {
+  margin-top: 50px;
 }
