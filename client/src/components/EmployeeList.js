@@ -40,7 +40,12 @@ class EmployeeList extends Component {
     
     const list = employees.map(emp => (
       <tr key={emp.id} >
-        <td>{emp.nom} {emp.prenom}</td>
+        <td>{emp.nom}</td>
+        <td>{emp.prenom}</td>
+        <td>{emp.age}</td>
+        <td>{emp.poste}</td>
+        <td>{emp.experience.titre}</td>
+        <td>{emp.experience.description}</td>
         <td>
           <i className="glyphicon glyphicon-pencil" onClick={ () => this.handleEditEmployee(emp) } />
           <i className="glyphicon glyphicon-trash" onClick={ () => this.handleDeleteEmployee(emp) }/>
@@ -49,13 +54,18 @@ class EmployeeList extends Component {
     ));
     
     return (
-      <div>
+      <div className="employee-list-container">
         <Grid>
-          <Button bsStyle="primary" onClick={this.handleShow}>Add Employee</Button>
+          <Button bsStyle="primary" className="add-employee-btn" onClick={this.handleShow}>Add Employee</Button>
           <Table striped bordered condensed hover>
             <thead>
               <tr>
-                <th>Employees</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Age</th>
+                <th>Poste</th>
+                <th>Titre</th>
+                <th>Description</th>
                 <th>Actions</th>
               </tr>
             </thead>
