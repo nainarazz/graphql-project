@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { Table, Button, Grid } from 'react-bootstrap';
 import { graphql, compose } from 'react-apollo';
 import ModalInput from './ModalInput';
-import { getEmployeeQuery, getEmployeesQuery } from '../queries/queries';
+import { getEmployeesQuery } from '../queries/queries';
 
 class EmployeeList extends Component {
   state = {
     showModal: false,
-    selectedEmployee: null,
     data: null
   }
 
@@ -20,10 +19,7 @@ class EmployeeList extends Component {
   }
 
   handleEditEmployee = (emp) => {
-    console.log('props ', this.props);
-    // const data = this.props.getEmployeeQuery.employee;
-    // console.log("data ", data);
-    this.setState({ selectedEmployee: emp.id, data: emp, showModal: true });
+    this.setState({ data: emp, showModal: true });
   }
 
   displayEmployees() {
@@ -34,7 +30,7 @@ class EmployeeList extends Component {
     }
 
     const employees = data.employees;
-
+    
     const list = employees.map(emp => (
       <tr key={emp.id} >
         <td>{emp.nom} {emp.prenom}</td>
@@ -69,13 +65,10 @@ class EmployeeList extends Component {
     return (
       <div>
         {this.displayEmployees()}
-        <ModalInput id={this.state.selectedEmployee} data={this.state.data} show={this.state.showModal} onHide={this.closeModal} onSave={this.handleSave} />
+        <ModalInput data={this.state.data} show={this.state.showModal} onHide={this.closeModal} />
       </div>
     );
   }
 }
 
-export default compose(
-  // graphql(getEmployeeQuery, {name: "getEmployeeQuery"}),
-  graphql(getEmployeesQuery, { name: 'getEmployeesQuery'})
-)(EmployeeList);
+export default graphql(getEmployeesQuery, { name: 'getEmployeesQuery'})(EmployeeList);

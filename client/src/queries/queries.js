@@ -5,7 +5,13 @@ const getEmployeesQuery = gql`
     employees {
       id,
       nom,
-      prenom
+      prenom,
+      age,
+      poste,
+      experience {
+        titre,
+        description
+      }
     }
   }
 `
