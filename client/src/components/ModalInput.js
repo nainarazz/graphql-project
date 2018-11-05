@@ -49,18 +49,18 @@ class ModalInput extends Component {
     saveData = async () => {
         const experienceResult = await this.props.addExperienceMutation({
             variables: {
-                titre: this.state.formFields.titre,
-                description: this.state.formFields.description
+                titre: this.state.formFields.titre || "",
+                description: this.state.formFields.description || ""
             }
         });
 
         await this.props.addEmployeeMutation({
             variables: {
-                nom: this.state.formFields.nom,
-                prenom: this.state.formFields.prenom,
-                age: parseInt( this.state.formFields.age, 10),
-                poste: this.state.formFields.poste,
-                experienceId: experienceResult.data.addExperience.id,
+                nom: this.state.formFields.nom || "",
+                prenom: this.state.formFields.prenom || "",
+                age: parseInt( this.state.formFields.age, 10) || 0,
+                poste: this.state.formFields.poste || "",
+                experienceId: experienceResult.data.addExperience.id || "",
             },
             refetchQueries: [{ query: getEmployeesQuery }]
         });
@@ -73,19 +73,19 @@ class ModalInput extends Component {
         await this.props.updateExperienceMutation({
             variables: {
                 id: this.state.formFields.experienceId,
-                titre: this.state.formFields.titre,
-                description: this.state.formFields.description
+                titre: this.state.formFields.titre || "",
+                description: this.state.formFields.description || ""
             }
         });
 
         await this.props.updateEmployeeMutation({
             variables: {
-                id: this.state.formFields.id,
-                nom: this.state.formFields.nom,
-                prenom: this.state.formFields.prenom,
-                age: parseInt( this.state.formFields.age, 10),
-                poste: this.state.formFields.poste,
-                experienceId: this.state.formFields.experienceId,
+                id: this.state.formFields.id || "",
+                nom: this.state.formFields.nom || "",
+                prenom: this.state.formFields.prenom || "",
+                age: parseInt( this.state.formFields.age, 10) || 0,
+                poste: this.state.formFields.poste || "",
+                experienceId: this.state.formFields.experienceId || "",
             },
             refetchQueries: [{ query: getEmployeesQuery }]
         });
