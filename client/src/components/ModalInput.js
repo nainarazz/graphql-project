@@ -16,18 +16,22 @@ import EmployeeForm from './employeeForm';
 class ModalInput extends Component {
     state = {
         formFields: {
+            id: '',
             nom: '',
             prenom: '',
             age: '',
             poste: '',
+            experienceId: '',
             titre: '',
             description: ''
         },
         initialFields: {
+            id: '',
             nom: '',
             prenom: '',
             age: '',
             poste: '',
+            experienceId: '',
             titre: '',
             description: ''
         }
@@ -35,30 +39,63 @@ class ModalInput extends Component {
 
     submitForm = async e => {
         e.preventDefault();
+        if (this.state.formFields.id) {
+            await this.updateData();
+        } else {
+            await this.saveData();
+        }
+    }
 
-        const insertedExperience = await this.props.addExperienceMutation({
+    saveData = async () => {
+        const experienceResult = await this.props.addExperienceMutation({
             variables: {
-                titre: this.state.titre,
-                description: this.state.description
+                titre: this.state.formFields.titre,
+                description: this.state.formFields.description
             }
         });
 
         await this.props.addEmployeeMutation({
             variables: {
-                nom: this.state.nom,
-                prenom: this.state.prenom,
-                age: parseInt( this.state.age, 10),
-                poste: this.state.poste,
-                experienceId: insertedExperience.data.addExperience.id,
+                nom: this.state.formFields.nom,
+                prenom: this.state.formFields.prenom,
+                age: parseInt( this.state.formFields.age, 10),
+                poste: this.state.formFields.poste,
+                experienceId: experienceResult.data.addExperience.id,
             },
             refetchQueries: [{ query: getEmployeesQuery }]
         });
         
+        this.initializeState();
         this.props.onHide();
     }
 
-    handleSave = () => {
-        this.setState({ showModal: false });
+    updateData = async () => {
+        await this.props.updateExperienceMutation({
+            variables: {
+                id: this.state.formFields.experienceId,
+                titre: this.state.formFields.titre,
+                description: this.state.formFields.description
+            }
+        });
+
+        await this.props.updateEmployeeMutation({
+            variables: {
+                id: this.state.formFields.id,
+                nom: this.state.formFields.nom,
+                prenom: this.state.formFields.prenom,
+                age: parseInt( this.state.formFields.age, 10),
+                poste: this.state.formFields.poste,
+                experienceId: this.state.formFields.experienceId,
+            },
+            refetchQueries: [{ query: getEmployeesQuery }]
+        });
+        
+        this.initializeState();
+        this.props.onHide();
+    }
+
+    initializeState = () => {
+        this.setState({ formFields: { ...this.state.initialFields} });
       }
 
     changed = (e, identifier) => {
@@ -75,16 +112,8 @@ class ModalInput extends Component {
 
             this.setState({formFields: data});
         } else {
-            const emptyFields = { 
-                nom: '',
-                prenom: '',
-                age: '',
-                poste: '',
-                titre: '',
-                description: ''
-            }
             this.setState({
-                formFields: { ...emptyFields }
+                formFields: { ...this.state.initialFields },
             });
         }
     }

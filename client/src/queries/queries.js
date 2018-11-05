@@ -8,6 +8,7 @@ const getEmployeesQuery = gql`
       prenom,
       age,
       poste,
+      experienceId,
       experience {
         titre,
         description

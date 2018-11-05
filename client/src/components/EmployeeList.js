@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Button, Grid } from 'react-bootstrap';
-import { graphql, compose } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import ModalInput from './ModalInput';
 import { getEmployeesQuery } from '../queries/queries';
 
