@@ -1,25 +1,33 @@
 import React, { Component } from 'react';
 import { Table, Button, Grid } from 'react-bootstrap';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import ModalInput from './ModalInput';
-import { getEmployeesQuery } from '../queries/queries';
+import { getEmployeeQuery, getEmployeesQuery } from '../queries/queries';
 
 class EmployeeList extends Component {
   state = {
     showModal: false,
-    employees: []
+    selectedEmployee: null,
+    data: null
   }
 
-  handleClose = () => {
+  closeModal = () => {
     this.setState({ showModal: false });
   }
  
   handleShow = () => {
-    this.setState({ showModal: true });
+    this.setState({ showModal: true, data: null });
+  }
+
+  handleEditEmployee = (emp) => {
+    console.log('props ', this.props);
+    // const data = this.props.getEmployeeQuery.employee;
+    // console.log("data ", data);
+    this.setState({ selectedEmployee: emp.id, data: emp, showModal: true });
   }
 
   displayEmployees() {
-    const data = this.props.data;
+    const data = this.props.getEmployeesQuery;
 
     if (data.loading) {
       return 'Loading list of employees ...';
@@ -28,10 +36,10 @@ class EmployeeList extends Component {
     const employees = data.employees;
 
     const list = employees.map(emp => (
-      <tr key={emp.id}>
+      <tr key={emp.id} >
         <td>{emp.nom} {emp.prenom}</td>
         <td>
-          <i className="glyphicon glyphicon-pencil" />
+          <i className="glyphicon glyphicon-pencil" onClick={ () => this.handleEditEmployee(emp) } />
           <i className="glyphicon glyphicon-trash" />
         </td>
       </tr>
@@ -61,10 +69,13 @@ class EmployeeList extends Component {
     return (
       <div>
         {this.displayEmployees()}
-        <ModalInput show={this.state.showModal} onHide={this.handleClose} onSave={this.handleSave} />
+        <ModalInput id={this.state.selectedEmployee} data={this.state.data} show={this.state.showModal} onHide={this.closeModal} onSave={this.handleSave} />
       </div>
     );
   }
 }
 
-export default graphql(getEmployeesQuery)(EmployeeList);
+export default compose(
+  // graphql(getEmployeeQuery, {name: "getEmployeeQuery"}),
+  graphql(getEmployeesQuery, { name: 'getEmployeesQuery'})
+)(EmployeeList);
